@@ -99,8 +99,7 @@ export default function ScanScreen() {
           'Create' in bottom tab bar to generate a QR Code.
         </Text>
         <Button
-          mode="contained-tonal"
-          buttonColor={MD2Colors.green300}
+          mode="outlined"
           icon="camera-outline"
           style={{ marginBottom: 20, alignSelf: 'center' }}
           onPress={handleOpenCamera}

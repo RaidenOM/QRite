@@ -17,11 +17,6 @@ const HomeTabs = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: {
-          borderTopWidth: 0,
-          backgroundColor: '#fac7ffff',
-          borderColor: '#fff',
-        },
       }}
     >
       <Tab.Screen
