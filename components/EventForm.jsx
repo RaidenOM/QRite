@@ -98,7 +98,7 @@ END:VCALENDAR
   };
 
   return (
-    <View style={{ marginTop: 20, paddingHorizontal: 10 }}>
+    <View style={{ marginTop: 40, paddingHorizontal: 10 }}>
       <TextInput
         mode="outlined"
         label={'Title'}

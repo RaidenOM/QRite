@@ -6,7 +6,7 @@ export default function ({ onGenerate }) {
   const [text, setText] = useState('');
 
   return (
-    <View style={{ marginTop: 20, paddingHorizontal: 10 }}>
+    <View style={{ marginTop: 40, paddingHorizontal: 10 }}>
       <TextInput
         mode="outlined"
         label={'Text'}
@@ -21,7 +21,7 @@ export default function ({ onGenerate }) {
         mode="outlined"
         style={{ alignSelf: 'center', marginTop: 20 }}
         onPress={() => {
-          if (text) {
+          if (text.trim()) {
             onGenerate(text);
           } else {
             Alert.alert('Empty Text', 'Text cannot be empty.');

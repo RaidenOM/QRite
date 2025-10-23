@@ -6,7 +6,7 @@ import validator from 'validator';
 export default function URLForm({ onGenerate }) {
   const [url, setUrl] = useState('');
   return (
-    <View style={{ marginTop: 20, paddingHorizontal: 10 }}>
+    <View style={{ marginTop: 40, paddingHorizontal: 10 }}>
       <TextInput
         mode="outlined"
         label={'URL'}
@@ -20,7 +20,7 @@ export default function URLForm({ onGenerate }) {
         mode="outlined"
         style={{ alignSelf: 'center', marginTop: 20 }}
         onPress={async () => {
-          if (url && validator.isURL(url)) {
+          if (url.trim() && validator.isURL(url)) {
             await onGenerate(url);
           } else {
             Alert.alert('Invalid URL', 'Please enter a valid URL.');

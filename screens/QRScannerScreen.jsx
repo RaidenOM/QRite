@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Linking, StyleSheet, View } from 'react-native';
+import { useContext, useState } from 'react';
+import { Linking, StyleSheet, Vibration, View } from 'react-native';
 import {
   Button,
   Dialog,
@@ -18,6 +18,7 @@ import {
 } from 'react-native-vision-camera';
 import validator from 'validator';
 import LottieView from 'lottie-react-native';
+import { AppContext } from '../store/AppContext';
 
 export default function QRScannerScreen() {
   const [torch, setTorch] = useState(false);
@@ -27,6 +28,9 @@ export default function QRScannerScreen() {
   const [showDialog, setShowDialog] = useState(false);
   const [showSnack, setShowSnack] = useState(false);
   const [facing, setFacing] = useState('back');
+  const { sound, playSound, stopSound } = useContext(AppContext);
+
+  console.log({ torch });
 
   const device = useCameraDevice(facing);
   console.log(device);
@@ -66,6 +70,9 @@ export default function QRScannerScreen() {
   };
 
   const handleScan = data => {
+    if (!scanning) return;
+    playSound();
+    Vibration.vibrate(100);
     let value = data[0].value;
     let type = getType(value);
 
@@ -136,7 +143,7 @@ export default function QRScannerScreen() {
       </Portal>
       <Camera
         style={styles.camera}
-        codeScanner={scanning ? codeScanner : undefined}
+        codeScanner={codeScanner}
         torch={torch ? 'on' : 'off'}
         device={device}
         isActive={true}
