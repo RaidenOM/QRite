@@ -1,17 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
-import { useEffect, useState } from 'react';
-import { Alert, Dimensions, View } from 'react-native';
-import {
-  Button,
-  Divider,
-  Drawer,
-  IconButton,
-  MD2Colors,
-  Menu,
-  Portal,
-  Text,
-} from 'react-native-paper';
+import { useState } from 'react';
+import { Alert, View } from 'react-native';
+import { Button, MD2Colors, Text } from 'react-native-paper';
 import { useCameraPermission } from 'react-native-vision-camera';
 import LinearGradient from 'react-native-linear-gradient';
 
