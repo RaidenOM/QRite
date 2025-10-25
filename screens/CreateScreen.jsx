@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { Alert, ScrollView, View } from 'react-native';
+import { useRef, useState } from 'react';
+import { ScrollView, View } from 'react-native';
 import {
   Button,
   Dialog,
@@ -74,6 +74,7 @@ export default function CreateScreen() {
             fontFamily: 'Poppins',
             marginVertical: 30,
             marginHorizontal: 16,
+            fontFamily: 'Poppins-Regular',
           }}
         >
           Select Category
@@ -90,7 +91,6 @@ export default function CreateScreen() {
             value={type}
             onValueChange={value => {
               setType(value);
-              setValue('');
             }}
             buttons={categoryButtons}
           />
@@ -105,7 +105,9 @@ export default function CreateScreen() {
           onDismiss={() => setDialogShown(false)}
           dismissable={false}
         >
-          <Dialog.Title style={{ textAlign: 'center' }}>
+          <Dialog.Title
+            style={{ textAlign: 'center', fontFamily: 'Poppins-Regular' }}
+          >
             Generated QR
           </Dialog.Title>
           <Dialog.Content

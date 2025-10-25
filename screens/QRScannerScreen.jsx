@@ -28,7 +28,7 @@ export default function QRScannerScreen() {
   const [showDialog, setShowDialog] = useState(false);
   const [showSnack, setShowSnack] = useState(false);
   const [facing, setFacing] = useState('back');
-  const { sound, playSound, stopSound } = useContext(AppContext);
+  const { playSound } = useContext(AppContext);
 
   console.log({ torch });
 

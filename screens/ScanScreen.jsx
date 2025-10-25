@@ -95,7 +95,7 @@ export default function ScanScreen() {
           style={{ marginBottom: 20, alignSelf: 'center' }}
           onPress={handleOpenCamera}
         >
-          <Text style={{ fontFamily: 'Poppins-Regular' }}>Open Camera</Text>
+          Open Camera
         </Button>
       </View>
     </LinearGradient>
