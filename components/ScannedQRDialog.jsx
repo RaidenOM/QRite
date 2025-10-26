@@ -69,7 +69,7 @@ export default function ScannedQRDialog({ visible, onDismiss, value, type }) {
           <Button onPress={onDismiss}>Cancel</Button>
           <View style={{ flexDirection: 'row' }}>
             <Button onPress={copyHandler}>Copy</Button>
-            {type !== 'Plaintext' && (
+            {type !== 'PlainText' && (
               <Button onPress={actionHandler}>Perform Action</Button>
             )}
           </View>

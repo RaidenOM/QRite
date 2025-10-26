@@ -23,7 +23,7 @@ const getType = scannedValue => {
   ) {
     detectedType = 'URL';
   } else {
-    detectedType = 'Plaintext';
+    detectedType = 'PlainText';
   }
 
   return detectedType;
