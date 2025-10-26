@@ -1,17 +1,50 @@
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
-import { useState } from 'react';
-import { Alert, View } from 'react-native';
+import { useContext, useState } from 'react';
+import { Alert, ScrollView, Vibration, View } from 'react-native';
 import { Button, MD2Colors, Text } from 'react-native-paper';
 import { useCameraPermission } from 'react-native-vision-camera';
 import LinearGradient from 'react-native-linear-gradient';
+import { launchImageLibrary } from 'react-native-image-picker';
+import QRKit from 'react-native-qr-kit';
+import getType from '../utils/getType';
+import validator from 'validator';
+import ScannedQRDialog from '../components/ScannedQRDialog';
+import { AppContext } from '../store/AppContext';
 
 export default function ScanScreen() {
   const navigation = useNavigation();
   const { hasPermission, requestPermission } = useCameraPermission();
-  const [showMenu, setShowMenu] = useState(false);
+  const [value, setValue] = useState('');
+  const [type, setType] = useState('');
+  const [showDialog, setShowDialog] = useState(false);
+  const { playSound } = useContext(AppContext);
 
-  console.log({ showMenu });
+  const handleGalleryPick = async () => {
+    const response = await launchImageLibrary({
+      mediaType: 'photo',
+    });
+
+    if (response.didCancel) return;
+
+    const result = await QRKit.decodeQR(response.assets[0].uri);
+    playSound();
+    Vibration.vibrate(100);
+
+    let scannedValue = result.data;
+    let detectedType = getType(scannedValue);
+
+    if (
+      detectedType === 'URL' &&
+      !validator.isURL(scannedValue, { require_protocol: true })
+    ) {
+      scannedValue = 'http://' + scannedValue;
+    }
+
+    setValue(scannedValue);
+    setType(detectedType);
+    setShowDialog(true);
+  };
 
   const handleOpenCamera = async () => {
     if (!hasPermission) {
@@ -34,6 +67,13 @@ export default function ScanScreen() {
       }}
       colors={['#fac7ffff', '#fff']}
     >
+      <ScannedQRDialog
+        onDismiss={() => setShowDialog(false)}
+        visible={showDialog}
+        type={type}
+        value={value}
+      />
+
       <View
         style={{
           height: 70,
@@ -52,52 +92,58 @@ export default function ScanScreen() {
           QRite
         </Text>
       </View>
-      <View style={{ alignSelf: 'center' }}>
-        <LottieView
-          source={require('../assets/lottie/QR Code.json')}
-          style={{
-            width: 300,
-            height: 300,
-          }}
-          autoPlay
-        />
-      </View>
-      <Text
-        variant="displaySmall"
-        style={{
-          textAlign: 'center',
-          fontFamily: 'Poppins-SemiBold',
-          marginHorizontal: 20,
-        }}
-      >
-        Welcome to QRite!
-      </Text>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'space-between',
-        }}
-      >
+      <ScrollView>
+        <View style={{ alignSelf: 'center' }}>
+          <LottieView
+            source={require('../assets/lottie/QR Code.json')}
+            style={{
+              width: 300,
+              height: 300,
+            }}
+            autoPlay
+          />
+        </View>
         <Text
-          variant="bodyLarge"
+          variant="displaySmall"
           style={{
-            marginHorizontal: 30,
-            marginTop: 20,
-            fontFamily: 'Poppins-Regular',
+            textAlign: 'center',
+            fontFamily: 'Poppins-SemiBold',
+            marginHorizontal: 20,
           }}
         >
-          To open camera and scan a QR Code press the button below. Or click on
-          'Create' in bottom tab bar to generate a QR Code.
+          Welcome to QRite!
         </Text>
-        <Button
-          mode="outlined"
-          icon="camera-outline"
-          style={{ marginBottom: 20, alignSelf: 'center' }}
-          onPress={handleOpenCamera}
-        >
-          Open Camera
-        </Button>
-      </View>
+        <View>
+          <Text
+            variant="bodyLarge"
+            style={{
+              marginHorizontal: 30,
+              marginTop: 10,
+              fontFamily: 'Poppins-Regular',
+            }}
+          >
+            Scan from Camera or Gallery, or create your own QR!
+          </Text>
+          <View style={{ paddingVertical: 20 }}>
+            <Button
+              mode="outlined"
+              icon="camera-outline"
+              style={{ alignSelf: 'center', marginBottom: 20 }}
+              onPress={handleOpenCamera}
+            >
+              Open Camera
+            </Button>
+            <Button
+              mode="contained"
+              icon="image-multiple-outline"
+              style={{ alignSelf: 'center' }}
+              onPress={handleGalleryPick}
+            >
+              Pick from Gallery
+            </Button>
+          </View>
+        </View>
+      </ScrollView>
     </LinearGradient>
   );
 }

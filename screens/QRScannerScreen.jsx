@@ -1,16 +1,6 @@
 import { useContext, useState } from 'react';
-import { Linking, StyleSheet, Vibration, View } from 'react-native';
-import {
-  Button,
-  Dialog,
-  IconButton,
-  Portal,
-  Snackbar,
-  Text,
-} from 'react-native-paper';
-import * as FileSystem from 'react-native-fs';
-import Share from 'react-native-share';
-import Clipboard from '@react-native-clipboard/clipboard';
+import { StyleSheet, Vibration, View } from 'react-native';
+import { IconButton } from 'react-native-paper';
 import {
   Camera,
   useCameraDevice,
@@ -19,11 +9,13 @@ import {
 import validator from 'validator';
 import LottieView from 'lottie-react-native';
 import { AppContext } from '../store/AppContext';
+import ScannedQRDialog from '../components/ScannedQRDialog';
+import getType from '../utils/getType';
 
 export default function QRScannerScreen() {
   const [torch, setTorch] = useState(false);
   const [scanning, setScanning] = useState(true);
-  const [data, setData] = useState(null);
+  const [value, setValue] = useState(null);
   const [type, setType] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
   const [showSnack, setShowSnack] = useState(false);
@@ -37,110 +29,42 @@ export default function QRScannerScreen() {
 
   const codeScanner = useCodeScanner({
     codeTypes: ['qr'],
-    onCodeScanned: data => {
-      handleScan(data);
+    onCodeScanned: scannedData => {
+      handleScan(scannedData);
     },
   });
 
-  const getType = data => {
-    const normalizedData = data.trim().toLowerCase();
-    let type;
-
-    if (normalizedData.startsWith('mailto:')) {
-      type = 'Email';
-    } else if (
-      normalizedData.startsWith('begin:vcard') &&
-      normalizedData.endsWith('end:vcard')
-    ) {
-      type = 'Contact';
-    } else if (
-      normalizedData.startsWith('begin:vevent') &&
-      normalizedData.endsWith('end:vevent')
-    ) {
-      type = 'Event';
-    } else if (normalizedData.startsWith('tel:')) {
-      type = 'Phone';
-    } else if (validator.isURL(normalizedData, { require_protocol: false })) {
-      type = 'URL';
-    } else {
-      type = 'Plaintext';
-    }
-
-    return type;
-  };
-
-  const handleScan = data => {
+  const handleScan = scannedData => {
     if (!scanning) return;
+    setScanning(false);
+
     playSound();
     Vibration.vibrate(100);
-    let value = data[0].value;
-    let type = getType(value);
 
-    if (type === 'URL' && !validator.isURL(value, { require_protocol: true })) {
-      value = 'http://' + value;
+    let scannedValue = scannedData[0].value;
+    let detectedType = getType(scannedValue);
+
+    if (
+      detectedType === 'URL' &&
+      !validator.isURL(scannedValue, { require_protocol: true })
+    ) {
+      scannedValue = 'http://' + scannedValue;
     }
 
-    setData(value);
-    setType(type);
-    setScanning(false);
+    setValue(scannedValue);
+    setType(detectedType);
     setShowDialog(true);
-  };
-
-  const performAction = async () => {
-    if (type === 'Plaintext') {
-      Clipboard.setString(data);
-      setShowSnack(true);
-    } else if (type === 'Contact') {
-      const path = FileSystem.CachesDirectoryPath + '/contact.vcf';
-      await FileSystem.writeFile(path, data);
-      await Share.open({
-        title: 'Add to Contacts',
-        url: 'file://' + path,
-        type: 'text/vcard',
-      });
-    } else if (type === 'Event') {
-      const path = FileSystem.CachesDirectoryPath + '/event.ics';
-      await FileSystem.writeFile(path, data);
-      await Share.open({
-        title: 'Add Event',
-        url: 'file://' + path,
-        type: 'text/calendar',
-      });
-    } else {
-      Linking.openURL(data);
-    }
-    setShowDialog(false);
   };
 
   return (
     <View style={styles.container}>
-      <Portal>
-        <Snackbar
-          visible={showSnack}
-          onDismiss={() => setShowSnack(false)}
-          action={{
-            label: 'OK',
-            onPress: () => setShowSnack(false),
-          }}
-        >
-          Text Copied to Clipboard!
-        </Snackbar>
-      </Portal>
-      <Portal>
-        <Dialog visible={showDialog}>
-          <Dialog.Title>
-            <Text style={{ textAlign: 'center' }}>Scan Result</Text>
-          </Dialog.Title>
-          <Dialog.Content>
-            <Text>Data: {data}</Text>
-            <Text>Type: {type}</Text>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={() => setShowDialog(false)}>Cancel</Button>
-            <Button onPress={performAction}>Perform Action</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
+      <ScannedQRDialog
+        onDismiss={() => setShowDialog(false)}
+        visible={showDialog}
+        value={value}
+        type={type}
+      />
+
       <Camera
         style={styles.camera}
         codeScanner={codeScanner}
@@ -215,10 +139,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 20,
     bottom: 80,
-  },
-  grid: {
-    position: 'absolute',
-    alignSelf: 'center',
-    top: 100,
   },
 });
