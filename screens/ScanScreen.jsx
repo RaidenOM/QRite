@@ -5,12 +5,12 @@ import { Alert, ScrollView, Vibration, View } from 'react-native';
 import { Button, MD2Colors, Text } from 'react-native-paper';
 import { useCameraPermission } from 'react-native-vision-camera';
 import LinearGradient from 'react-native-linear-gradient';
-import { launchImageLibrary } from 'react-native-image-picker';
 import QRKit from 'react-native-qr-kit';
 import getType from '../utils/getType';
 import validator from 'validator';
 import ScannedQRDialog from '../components/ScannedQRDialog';
 import { AppContext } from '../store/AppContext';
+import ImagePicker from 'react-native-image-crop-picker';
 
 export default function ScanScreen() {
   const navigation = useNavigation();
@@ -21,29 +21,35 @@ export default function ScanScreen() {
   const { playSound } = useContext(AppContext);
 
   const handleGalleryPick = async () => {
-    const response = await launchImageLibrary({
-      mediaType: 'photo',
-    });
+    try {
+      const response = await ImagePicker.openPicker({
+        mediaType: 'photo',
+        cropping: true,
+        freeStyleCropEnabled: true,
+      });
 
-    if (response.didCancel) return;
+      if (!response) return;
 
-    const result = await QRKit.decodeQR(response.assets[0].uri);
-    playSound();
-    Vibration.vibrate(100);
+      const result = await QRKit.decodeQR(response.path);
+      playSound();
+      Vibration.vibrate(100);
 
-    let scannedValue = result.data;
-    let detectedType = getType(scannedValue);
+      let scannedValue = result.data;
+      let detectedType = getType(scannedValue);
 
-    if (
-      detectedType === 'URL' &&
-      !validator.isURL(scannedValue, { require_protocol: true })
-    ) {
-      scannedValue = 'http://' + scannedValue;
+      if (
+        detectedType === 'URL' &&
+        !validator.isURL(scannedValue, { require_protocol: true })
+      ) {
+        scannedValue = 'http://' + scannedValue;
+      }
+
+      setValue(scannedValue);
+      setType(detectedType);
+      setShowDialog(true);
+    } catch (error) {
+      console.log(error);
     }
-
-    setValue(scannedValue);
-    setType(detectedType);
-    setShowDialog(true);
   };
 
   const handleOpenCamera = async () => {
