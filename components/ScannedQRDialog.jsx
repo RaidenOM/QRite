@@ -36,8 +36,6 @@ export default function ScannedQRDialog({ visible, onDismiss, value, type }) {
       }
     } catch (err) {
       console.log('Share failed', err);
-    } finally {
-      onDismiss();
     }
   };
 
@@ -56,20 +54,26 @@ export default function ScannedQRDialog({ visible, onDismiss, value, type }) {
         </Snackbar>
       </Portal>
       <Dialog visible={visible}>
-        <Dialog.Title>
-          <Text style={{ textAlign: 'center', fontFamily: 'Poppins-Regular' }}>
-            Scan Result
-          </Text>
+        <Dialog.Title
+          style={{ textAlign: 'center', fontFamily: 'Poppins-Regular' }}
+        >
+          Scan Result
         </Dialog.Title>
         <Dialog.Content>
-          <Text>Data: {value}</Text>
-          <Text>Type: {type}</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <Text variant="bodyMedium">Data: </Text>
+            <Text variant="bodyMedium">{value}</Text>
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <Text variant="bodyMedium">Type: </Text>
+            <Text variant="bodyMedium">{type}</Text>
+          </View>
         </Dialog.Content>
         <Dialog.Actions style={{ justifyContent: 'space-between' }}>
           <Button onPress={onDismiss}>Cancel</Button>
           <View style={{ flexDirection: 'row' }}>
             <Button onPress={copyHandler}>Copy</Button>
-            {type !== 'PlainText' && (
+            {type !== 'Text' && (
               <Button onPress={actionHandler}>Perform Action</Button>
             )}
           </View>

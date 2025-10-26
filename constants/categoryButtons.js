@@ -5,8 +5,8 @@ const categoryButtons = [
     icon: 'link',
   },
   {
-    value: 'PlainText',
-    label: 'Plain Text',
+    value: 'Text',
+    label: 'Text',
     icon: 'text-box-outline',
   },
   { value: 'Event', label: 'Event', icon: 'calendar' },

@@ -13,7 +13,7 @@ export default function EmailForm({ onGenerate }) {
   const data = `mailto:${to}?subject=${encodedSubject}&body=${encodedBody}`;
 
   return (
-    <View style={{ marginTop: 40, paddingHorizontal: 10 }}>
+    <View style={{ marginTop: 40, paddingHorizontal: 16 }}>
       <TextInput
         mode="outlined"
         label={'To'}

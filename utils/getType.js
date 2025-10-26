@@ -12,8 +12,8 @@ const getType = scannedValue => {
   ) {
     detectedType = 'Contact';
   } else if (
-    normalizedScannedValue.startsWith('begin:vevent') &&
-    normalizedScannedValue.endsWith('end:vevent')
+    normalizedScannedValue.startsWith('begin:vcalendar') &&
+    normalizedScannedValue.endsWith('end:vcalendar')
   ) {
     detectedType = 'Event';
   } else if (normalizedScannedValue.startsWith('tel:')) {
@@ -23,7 +23,7 @@ const getType = scannedValue => {
   ) {
     detectedType = 'URL';
   } else {
-    detectedType = 'PlainText';
+    detectedType = 'Text';
   }
 
   return detectedType;

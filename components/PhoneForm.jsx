@@ -8,7 +8,7 @@ export default function PhoneForm({ onGenerate }) {
   const data = `tel:${phone}`;
 
   return (
-    <View style={{ marginTop: 40, paddingHorizontal: 10 }}>
+    <View style={{ marginTop: 40, paddingHorizontal: 16 }}>
       <TextInput
         mode="outlined"
         label={'Phone'}

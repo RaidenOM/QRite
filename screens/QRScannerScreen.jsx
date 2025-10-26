@@ -18,7 +18,6 @@ export default function QRScannerScreen() {
   const [value, setValue] = useState(null);
   const [type, setType] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
-  const [showSnack, setShowSnack] = useState(false);
   const [facing, setFacing] = useState('back');
   const { playSound } = useContext(AppContext);
 

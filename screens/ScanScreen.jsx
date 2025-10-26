@@ -1,8 +1,15 @@
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import { useContext, useState } from 'react';
-import { Alert, ScrollView, Vibration, View } from 'react-native';
-import { Button, MD2Colors, Text } from 'react-native-paper';
+import {
+  Alert,
+  Linking,
+  Platform,
+  ScrollView,
+  Vibration,
+  View,
+} from 'react-native';
+import { Button, Text } from 'react-native-paper';
 import { useCameraPermission } from 'react-native-vision-camera';
 import LinearGradient from 'react-native-linear-gradient';
 import QRKit from 'react-native-qr-kit';
@@ -18,7 +25,7 @@ export default function ScanScreen() {
   const [value, setValue] = useState('');
   const [type, setType] = useState('');
   const [showDialog, setShowDialog] = useState(false);
-  const { playSound } = useContext(AppContext);
+  const { playSound, showAlert, dismissAlert } = useContext(AppContext);
 
   const handleGalleryPick = async () => {
     try {
@@ -31,6 +38,14 @@ export default function ScanScreen() {
       if (!response) return;
 
       const result = await QRKit.decodeQR(response.path);
+      console.log(result);
+
+      if (!result.success) throw new Error(result.message);
+
+      if (!result.data.trim())
+        throw new Error('QR Code does not contain any data');
+
+      console.log(result);
       playSound();
       Vibration.vibrate(100);
 
@@ -48,7 +63,11 @@ export default function ScanScreen() {
       setType(detectedType);
       setShowDialog(true);
     } catch (error) {
-      console.log(error);
+      const message = error.message
+        ? error.message
+        : 'Something went wrong while scanning';
+      if (message !== 'User cancelled image selection')
+        showAlert('Error', message);
     }
   };
 
@@ -56,9 +75,26 @@ export default function ScanScreen() {
     if (!hasPermission) {
       const granted = await requestPermission();
       if (!granted) {
-        Alert.alert(
-          'Permission Required',
-          'Permission to access Camera is required in order to scan.',
+        showAlert(
+          'Permission required',
+          'Permission to access camera is required in order to scan',
+          [
+            {
+              title: 'Cancel',
+              onPress: dismissAlert,
+            },
+            {
+              title: 'Grant Permissions',
+              onPress: () => {
+                if (Platform.OS === 'ios') {
+                  Linking.openURL('app-settings:');
+                } else {
+                  Linking.openSettings();
+                }
+                dismissAlert();
+              },
+            },
+          ],
         );
         return;
       }
@@ -80,25 +116,7 @@ export default function ScanScreen() {
         value={value}
       />
 
-      <View
-        style={{
-          height: 70,
-          alignItems: 'center',
-          flexDirection: 'row',
-        }}
-      >
-        <Text
-          variant="headlineMedium"
-          style={{
-            color: MD2Colors.purple400,
-            textAlign: 'center',
-            flex: 1,
-          }}
-        >
-          QRite
-        </Text>
-      </View>
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ paddingTop: 70 }}>
         <View style={{ alignSelf: 'center' }}>
           <LottieView
             source={require('../assets/lottie/QR Code.json')}
@@ -126,9 +144,11 @@ export default function ScanScreen() {
               marginHorizontal: 30,
               marginTop: 10,
               fontFamily: 'Poppins-Regular',
+              textAlign: 'center',
             }}
           >
-            Scan from Camera or Gallery, or create your own QR!
+            Scan a new image from Camera or an existing one from Gallery, or
+            create your own QR!
           </Text>
           <View style={{ paddingVertical: 20 }}>
             <Button

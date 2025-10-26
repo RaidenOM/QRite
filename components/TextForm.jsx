@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
+import { AppContext } from '../store/AppContext';
 
 export default function ({ onGenerate }) {
   const [text, setText] = useState('');
+  const { showAlert } = useContext(AppContext);
 
   return (
-    <View style={{ marginTop: 40, paddingHorizontal: 10 }}>
+    <View style={{ marginTop: 40, paddingHorizontal: 16 }}>
       <TextInput
         mode="outlined"
         label={'Text'}
@@ -24,7 +26,7 @@ export default function ({ onGenerate }) {
           if (text.trim()) {
             onGenerate(text);
           } else {
-            Alert.alert('Empty Text', 'Text cannot be empty.');
+            showAlert('Empty text', 'Text cannot be empty');
           }
         }}
       >

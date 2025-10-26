@@ -17,7 +17,7 @@ EMAIL;TYPE=INTERNET:${email}
 END:VCARD`;
 
   return (
-    <View style={{ marginTop: 40, paddingHorizontal: 10 }}>
+    <View style={{ marginTop: 40, paddingHorizontal: 16 }}>
       <TextInput
         mode="outlined"
         label="Full Name"

@@ -30,7 +30,7 @@ export default function CreateScreen() {
         return <EmailForm onGenerate={onGenerate} />;
       case 'Event':
         return <EventForm onGenerate={onGenerate} />;
-      case 'PlainText':
+      case 'Text':
         return <TextForm onGenerate={onGenerate} />;
       case 'Contact':
         return <ContactForm onGenerate={onGenerate} />;
@@ -44,7 +44,19 @@ export default function CreateScreen() {
           variant="displaySmall"
           style={{
             fontFamily: 'Poppins',
-            marginVertical: 30,
+            marginTop: 20,
+            marginBottom: 30,
+            marginHorizontal: 16,
+            fontFamily: 'Poppins-ExtraLight',
+          }}
+        >
+          Create QR
+        </Text>
+        <Text
+          variant="bodyMedium"
+          style={{
+            fontFamily: 'Poppins',
+            marginBottom: 10,
             marginHorizontal: 16,
             fontFamily: 'Poppins-Regular',
           }}
@@ -56,7 +68,7 @@ export default function CreateScreen() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
             alignItems: 'flex-start',
-            paddingHorizontal: 10,
+            paddingHorizontal: 16,
           }}
         >
           <SegmentedButtons

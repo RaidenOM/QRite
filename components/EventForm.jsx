@@ -28,6 +28,7 @@ END:VCALENDAR
       value: startDateTime,
       mode: 'date',
       onChange: (event, selectedDate) => {
+        if (event.type === 'dismissed') return;
         const combinedDateTime = new Date(
           selectedDate.getFullYear(),
           selectedDate.getMonth(),
@@ -60,7 +61,7 @@ END:VCALENDAR
       value: endDateTime,
       mode: 'date',
       onChange: (event, selectedDate) => {
-        if (!selectedDate) return;
+        if (event.type === 'dismissed') return;
 
         const combinedDateTime = new Date(
           selectedDate.getFullYear(),
@@ -98,7 +99,7 @@ END:VCALENDAR
   };
 
   return (
-    <View style={{ marginTop: 40, paddingHorizontal: 10 }}>
+    <View style={{ marginTop: 40, paddingHorizontal: 16 }}>
       <TextInput
         mode="outlined"
         label={'Title'}
