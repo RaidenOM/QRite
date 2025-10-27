@@ -1,14 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import { useContext, useState } from 'react';
-import {
-  Alert,
-  Linking,
-  Platform,
-  ScrollView,
-  Vibration,
-  View,
-} from 'react-native';
+import { Linking, Platform, ScrollView, Vibration, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import { useCameraPermission } from 'react-native-vision-camera';
 import LinearGradient from 'react-native-linear-gradient';
@@ -63,7 +56,30 @@ export default function ScanScreen() {
       setType(detectedType);
       setShowDialog(true);
     } catch (error) {
-      const message = error.message
+      let message;
+      if (error.code === 'E_NO_LIBRARY_PERMISSION') {
+        message =
+          'Permission to access library is required in order to scan photos';
+        showAlert('Permission required', message, [
+          {
+            title: 'Cancel',
+            onPress: dismissAlert,
+          },
+          {
+            title: 'Grant Permissions',
+            onPress: () => {
+              if (Platform.OS === 'ios') {
+                Linking.openURL('app-settings:');
+              } else {
+                Linking.openSettings();
+              }
+              dismissAlert();
+            },
+          },
+        ]);
+        return;
+      }
+      message = error.message
         ? error.message
         : 'Something went wrong while scanning';
       if (message !== 'User cancelled image selection')
@@ -116,7 +132,7 @@ export default function ScanScreen() {
         value={value}
       />
 
-      <ScrollView contentContainerStyle={{ paddingTop: 70 }}>
+      <ScrollView>
         <View style={{ alignSelf: 'center' }}>
           <LottieView
             source={require('../assets/lottie/QR Code.json')}

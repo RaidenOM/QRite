@@ -2,6 +2,7 @@ const { createContext, useState, useEffect } = require('react');
 import { Alert } from 'react-native';
 import Sound from 'react-native-sound';
 import AlertDialog from '../components/AlertDialog';
+import RNBootSplash from 'react-native-bootsplash';
 
 export const AppContext = createContext();
 
@@ -15,6 +16,15 @@ export default function AppContextProvider({ children }) {
     content: '',
     buttons: [],
   });
+
+  useEffect(() => {
+    const hideSplash = async () => {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      await RNBootSplash.hide();
+    };
+
+    hideSplash();
+  }, []);
 
   const showAlert = (title, content, buttons = []) => {
     setAlert({

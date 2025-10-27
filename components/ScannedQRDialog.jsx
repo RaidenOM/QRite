@@ -50,7 +50,7 @@ export default function ScannedQRDialog({ visible, onDismiss, value, type }) {
             onPress: () => setShowSnack(false),
           }}
         >
-          Text Copied to Clipboard!
+          Text copied to clipboard!
         </Snackbar>
       </Portal>
       <Dialog visible={visible}>
