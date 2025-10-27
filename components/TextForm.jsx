@@ -3,12 +3,12 @@ import { Alert, View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import { AppContext } from '../store/AppContext';
 
-export default function ({ onGenerate }) {
+export default function ({ onGenerate, style }) {
   const [text, setText] = useState('');
   const { showAlert } = useContext(AppContext);
 
   return (
-    <View style={{ marginTop: 40, paddingHorizontal: 16 }}>
+    <View style={style}>
       <TextInput
         mode="outlined"
         label={'Text'}

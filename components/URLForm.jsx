@@ -4,12 +4,12 @@ import { Button, TextInput } from 'react-native-paper';
 import validator from 'validator';
 import { AppContext } from '../store/AppContext';
 
-export default function URLForm({ onGenerate }) {
+export default function URLForm({ onGenerate, style }) {
   const [url, setUrl] = useState('');
   const { showAlert } = useContext(AppContext);
 
   return (
-    <View style={{ marginTop: 40, paddingHorizontal: 16 }}>
+    <View style={style}>
       <TextInput
         mode="outlined"
         label={'URL'}

@@ -17,7 +17,7 @@ import MaterialDesignIcons from '@react-native-vector-icons/material-design-icon
 import { Text } from 'react-native-paper';
 import AppContextProvider from './store/AppContext';
 import { Pressable, StatusBar, StyleSheet, View } from 'react-native';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -75,14 +75,17 @@ export default function App() {
 
   const openMenu = () => setShowMenu(true);
   const closeMenu = () => setShowMenu(false);
-  const toggleMenu = () => setShowMenu(prev => !prev);
 
-  useEffect(() => {
-    iconRef.current.measure((x, y, width, height, pageX, pageY) => {
-      setMenuY(pageY + height);
-      console.log(pageY);
-    });
-  }, [iconRef]);
+  const toggleMenu = () => {
+    if (!showMenu && iconRef.current) {
+      iconRef.current.measure((x, y, width, height, pageX, pageY) => {
+        setMenuY(pageY + height);
+        setShowMenu(true);
+      });
+    } else {
+      setShowMenu(false);
+    }
+  };
 
   return (
     <PaperProvider theme={MD3LightTheme}>
@@ -112,8 +115,8 @@ export default function App() {
                   {showMenu && (
                     <Portal>
                       <Pressable
-                        style={StyleSheet.absoluteFill}
                         onPress={toggleMenu}
+                        style={StyleSheet.absoluteFill}
                       ></Pressable>
                       <View
                         style={{

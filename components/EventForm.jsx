@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { View } from 'react-native';
 import { Button, IconButton, TextInput } from 'react-native-paper';
 
-export default function EventForm({ onGenerate }) {
+export default function EventForm({ onGenerate, style }) {
   const [title, setTitle] = useState('');
   const [description, setDiscription] = useState('');
   const [location, setLocation] = useState('');
@@ -99,7 +99,7 @@ END:VCALENDAR
   };
 
   return (
-    <View style={{ marginTop: 40, paddingHorizontal: 16 }}>
+    <View style={style}>
       <TextInput
         mode="outlined"
         label={'Title'}

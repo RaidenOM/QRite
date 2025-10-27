@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 
-export default function EmailForm({ onGenerate }) {
+export default function EmailForm({ onGenerate, style }) {
   const [to, setTo] = useState('');
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
@@ -13,7 +13,7 @@ export default function EmailForm({ onGenerate }) {
   const data = `mailto:${to}?subject=${encodedSubject}&body=${encodedBody}`;
 
   return (
-    <View style={{ marginTop: 40, paddingHorizontal: 16 }}>
+    <View style={style}>
       <TextInput
         mode="outlined"
         label={'To'}

@@ -23,17 +23,47 @@ export default function CreateScreen() {
   const renderForm = () => {
     switch (type) {
       case 'URL':
-        return <URLForm onGenerate={onGenerate} />;
+        return (
+          <URLForm
+            onGenerate={onGenerate}
+            style={{ marginHorizontal: 16, marginTop: 24 }}
+          />
+        );
       case 'Phone':
-        return <PhoneForm onGenerate={onGenerate} />;
+        return (
+          <PhoneForm
+            onGenerate={onGenerate}
+            style={{ marginHorizontal: 16, marginTop: 24 }}
+          />
+        );
       case 'Email':
-        return <EmailForm onGenerate={onGenerate} />;
+        return (
+          <EmailForm
+            onGenerate={onGenerate}
+            style={{ marginHorizontal: 16, marginTop: 24 }}
+          />
+        );
       case 'Event':
-        return <EventForm onGenerate={onGenerate} />;
+        return (
+          <EventForm
+            onGenerate={onGenerate}
+            style={{ marginHorizontal: 16, marginTop: 24 }}
+          />
+        );
       case 'Text':
-        return <TextForm onGenerate={onGenerate} />;
+        return (
+          <TextForm
+            onGenerate={onGenerate}
+            style={{ marginHorizontal: 16, marginTop: 24 }}
+          />
+        );
       case 'Contact':
-        return <ContactForm onGenerate={onGenerate} />;
+        return (
+          <ContactForm
+            onGenerate={onGenerate}
+            style={{ marginHorizontal: 16, marginTop: 24 }}
+          />
+        );
     }
   };
 
@@ -59,6 +89,7 @@ export default function CreateScreen() {
             marginBottom: 10,
             marginHorizontal: 16,
             fontFamily: 'Poppins-Regular',
+            position: 'static',
           }}
         >
           Select Category
@@ -81,7 +112,9 @@ export default function CreateScreen() {
         </ScrollView>
       </View>
 
-      {renderForm()}
+      <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
+        {renderForm()}
+      </ScrollView>
 
       <GeneratedQRDialog
         value={value}

@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 
-export default function PhoneForm({ onGenerate }) {
+export default function PhoneForm({ onGenerate, style }) {
   const [phone, setPhone] = useState('');
 
   const data = `tel:${phone}`;
 
   return (
-    <View style={{ marginTop: 40, paddingHorizontal: 16 }}>
+    <View style={style}>
       <TextInput
         mode="outlined"
         label={'Phone'}

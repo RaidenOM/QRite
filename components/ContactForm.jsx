@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 
-export default function ContactForm({ onGenerate }) {
+export default function ContactForm({ onGenerate, style }) {
   const [fullName, setFullName] = useState('');
   const [organization, setOrganization] = useState('');
   const [phone, setPhone] = useState('');
@@ -17,7 +17,7 @@ EMAIL;TYPE=INTERNET:${email}
 END:VCARD`;
 
   return (
-    <View style={{ marginTop: 40, paddingHorizontal: 16 }}>
+    <View style={style}>
       <TextInput
         mode="outlined"
         label="Full Name"
