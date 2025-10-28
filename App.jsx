@@ -1,23 +1,16 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {
-  Divider,
-  IconButton,
-  MD3LightTheme,
-  Menu,
-  PaperProvider,
-  Portal,
-  useTheme,
-} from 'react-native-paper';
+import { MD3LightTheme, PaperProvider, useTheme } from 'react-native-paper';
 import ScanScreen from './screens/ScanScreen';
 import CreateScreen from './screens/CreateScreen';
 import QRScannerScreen from './screens/QRScannerScreen';
 import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
 import { Text } from 'react-native-paper';
 import AppContextProvider from './store/AppContext';
-import { Pressable, StatusBar, StyleSheet, View } from 'react-native';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { StatusBar } from 'react-native';
+import SettingsScreen from './screens/SettingsScreen';
+import CustomMenu from './components/CustomMenu';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -69,23 +62,6 @@ const HomeTabs = () => {
 
 export default function App() {
   const theme = useTheme();
-  const [showMenu, setShowMenu] = useState(false);
-  const iconRef = useRef();
-  const [menuY, setMenuY] = useState(null);
-
-  const openMenu = () => setShowMenu(true);
-  const closeMenu = () => setShowMenu(false);
-
-  const toggleMenu = () => {
-    if (!showMenu && iconRef.current) {
-      iconRef.current.measure((x, y, width, height, pageX, pageY) => {
-        setMenuY(pageY + height);
-        setShowMenu(true);
-      });
-    } else {
-      setShowMenu(false);
-    }
-  };
 
   return (
     <PaperProvider theme={MD3LightTheme}>
@@ -93,8 +69,7 @@ export default function App() {
       <AppContextProvider>
         <NavigationContainer>
           <Stack.Navigator
-            screenOptions={{
-              headerTitle: 'QRite',
+            screenOptions={({ navigation, route }) => ({
               headerTintColor: '#fff',
               headerStyle: {
                 backgroundColor: theme.colors.primary,
@@ -103,60 +78,30 @@ export default function App() {
                 color: '#fff',
                 fontFamily: 'Michroma-Regular',
               },
-              headerRight: () => (
-                <>
-                  <View ref={iconRef}>
-                    <IconButton
-                      icon="dots-vertical"
-                      iconColor="#fff"
-                      onPress={toggleMenu}
-                    />
-                  </View>
-                  {showMenu && (
-                    <Portal>
-                      <Pressable
-                        onPress={toggleMenu}
-                        style={StyleSheet.absoluteFill}
-                      ></Pressable>
-                      <View
-                        style={{
-                          position: 'absolute',
-                          top: menuY,
-                          right: 16,
-                          backgroundColor: '#f4edf9',
-                          elevation: 8,
-                          borderRadius: theme.roundness,
-                        }}
-                      >
-                        <Menu.Item title="Share" leadingIcon={'share'} />
-                        <Menu.Item
-                          title="Rate on Google Play"
-                          leadingIcon={'star'}
-                        />
-                        <Divider />
-                        <Menu.Item title="Settings" leadingIcon={'cog'} />
-                        <Menu.Item
-                          title="Help and Feedback"
-                          leadingIcon={'help'}
-                        />
-                        <Divider />
-                        <Menu.Item
-                          title="Close Menu"
-                          leadingIcon={'close'}
-                          onPress={closeMenu}
-                        />
-                      </View>
-                    </Portal>
-                  )}
-                </>
-              ),
-            }}
+
+              animation: 'slide_from_right',
+              animationTypeForReplace: 'pop',
+            })}
           >
-            <Stack.Screen component={HomeTabs} name="HomeTabs" />
+            <Stack.Screen
+              component={HomeTabs}
+              name="HomeTabs"
+              options={({ navigation }) => ({
+                headerRight: () => <CustomMenu navigation={navigation} />,
+                headerTitle: 'QRite',
+              })}
+            />
             <Stack.Screen
               component={QRScannerScreen}
               name="QRScannerScreen"
               options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              component={SettingsScreen}
+              name="SettingsScreen"
+              options={{
+                headerTitle: 'Settings',
+              }}
             />
           </Stack.Navigator>
         </NavigationContainer>
