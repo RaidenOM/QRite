@@ -12,6 +12,29 @@ export default function SettingsScreen() {
   const theme = useTheme();
   const [showAboutDialog, setShowAboutDialog] = useState(false);
 
+  const trackColor = theme.dark
+    ? {
+        false: theme.colors.surfaceVariant,
+        true: theme.colors.primaryContainer,
+      }
+    : { false: theme.colors.outline, true: theme.colors.primaryContainer };
+
+  const soundThumbColor = theme.dark
+    ? userSettings.sound
+      ? theme.colors.primary
+      : theme.colors.outline
+    : userSettings.sound
+    ? theme.colors.primary
+    : theme.colors.surfaceVariant;
+
+  const vibrateThumbColor = theme.dark
+    ? userSettings.vibrate
+      ? theme.colors.primary
+      : theme.colors.outline
+    : userSettings.vibrate
+    ? theme.colors.primary
+    : theme.colors.surfaceVariant;
+
   return (
     <View
       style={{
@@ -68,11 +91,6 @@ export default function SettingsScreen() {
           General
         </List.Subheader>
         <List.Item
-          title="About"
-          left={() => <List.Icon icon="information-outline" />}
-          onPress={() => setShowAboutDialog(true)}
-        />
-        <List.Item
           title="Appearance"
           left={() => <List.Icon icon="theme-light-dark" />}
           right={() => (
@@ -107,21 +125,34 @@ export default function SettingsScreen() {
           disabled
         />
         <List.Item
+          title="Sound"
+          left={() => <List.Icon icon="volume-high" />}
+          right={() => (
+            <Switch
+              value={userSettings.sound}
+              onValueChange={toggleSound}
+              trackColor={trackColor}
+              thumbColor={soundThumbColor}
+            />
+          )}
+        />
+        <List.Item
           title="Haptic Feedback"
           left={() => <List.Icon icon="vibrate" />}
           right={() => (
             <Switch
               value={userSettings.vibrate}
               onValueChange={toggleVibrate}
+              trackColor={trackColor}
+              thumbColor={vibrateThumbColor}
             />
           )}
         />
+
         <List.Item
-          title="Sound"
-          left={() => <List.Icon icon="volume-high" />}
-          right={() => (
-            <Switch value={userSettings.sound} onValueChange={toggleSound} />
-          )}
+          title="About"
+          left={() => <List.Icon icon="information-outline" />}
+          onPress={() => setShowAboutDialog(true)}
         />
       </List.Section>
     </View>
