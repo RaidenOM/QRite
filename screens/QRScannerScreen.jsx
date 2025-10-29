@@ -19,7 +19,7 @@ export default function QRScannerScreen() {
   const [type, setType] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
   const [facing, setFacing] = useState('back');
-  const { playSound } = useContext(AppContext);
+  const { playSound, hapticFeedback } = useContext(AppContext);
 
   console.log({ torch });
 
@@ -38,7 +38,7 @@ export default function QRScannerScreen() {
     setScanning(false);
 
     playSound();
-    Vibration.vibrate(100);
+    hapticFeedback();
 
     let scannedValue = scannedData[0].value;
     let detectedType = getType(scannedValue);

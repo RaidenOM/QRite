@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import { useContext, useState } from 'react';
 import { Linking, Platform, ScrollView, Vibration, View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { Button, Text, useTheme } from 'react-native-paper';
 import { useCameraPermission } from 'react-native-vision-camera';
 import LinearGradient from 'react-native-linear-gradient';
 import QRKit from 'react-native-qr-kit';
@@ -18,10 +18,9 @@ export default function ScanScreen() {
   const [value, setValue] = useState('');
   const [type, setType] = useState('');
   const [showDialog, setShowDialog] = useState(false);
-  const { playSound, showAlert, dismissAlert, userSettings } =
+  const { playSound, showAlert, dismissAlert, userSettings, hapticFeedback } =
     useContext(AppContext);
-
-  const isDark = userSettings.theme === 'dark';
+  const theme = useTheme();
 
   const handleGalleryPick = async () => {
     try {
@@ -43,7 +42,7 @@ export default function ScanScreen() {
 
       console.log(result);
       playSound();
-      Vibration.vibrate(100);
+      hapticFeedback();
 
       let scannedValue = result.data;
       let detectedType = getType(scannedValue);
@@ -121,7 +120,7 @@ export default function ScanScreen() {
     navigation.navigate('QRScannerScreen');
   };
 
-  const gradientArray = isDark ? ['#000', '#000'] : ['#fac7ffff', '#fff'];
+  const gradientArray = theme.dark ? ['#000', '#000'] : ['#fac7ffff', '#fff'];
 
   return (
     <LinearGradient

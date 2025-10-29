@@ -1,4 +1,5 @@
-import { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
+import { useColorScheme } from 'react-native';
 import {
   DefaultTheme,
   MD3DarkTheme,
@@ -9,12 +10,22 @@ import {
 export const ThemeContext = createContext();
 
 export default function ThemeContextProvider({ children }) {
-  const [theme, setTheme] = useState(DefaultTheme);
+  const scheme = useColorScheme();
 
-  const changeTheme = theme => {
-    switch (theme) {
+  const [mode, setMode] = useState('system');
+  const [theme, setTheme] = useState(
+    scheme === 'dark' ? MD3DarkTheme : MD3LightTheme,
+  );
+
+  useEffect(() => {
+    if (mode === 'system')
+      setTheme(scheme === 'dark' ? MD3DarkTheme : MD3LightTheme);
+  }, [scheme]);
+
+  const changeTheme = selectedTheme => {
+    switch (selectedTheme) {
       case 'system':
-        setTheme(DefaultTheme);
+        setTheme(scheme === 'dark' ? MD3DarkTheme : MD3LightTheme);
         break;
       case 'dark':
         setTheme(MD3DarkTheme);
@@ -23,9 +34,8 @@ export default function ThemeContextProvider({ children }) {
         setTheme(MD3LightTheme);
         break;
     }
+    setMode(selectedTheme);
   };
-
-  console.log(theme);
 
   return (
     <ThemeContext.Provider value={{ theme, changeTheme }}>
