@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { SegmentedButtons, Text } from 'react-native-paper';
+import { SegmentedButtons, Text, useTheme } from 'react-native-paper';
 import categoryButtons from '../constants/categoryButtons';
 import GeneratedQRDialog from '../components/GeneratedQRDialog';
 import URLForm from '../components/URLForm';
@@ -14,6 +14,7 @@ export default function CreateScreen() {
   const [type, setType] = useState('URL');
   const [dialogShown, setDialogShown] = useState(false);
   const [value, setValue] = useState('');
+  const theme = useTheme();
 
   const onGenerate = value => {
     setValue(value);
@@ -68,7 +69,7 @@ export default function CreateScreen() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+    <View style={{ flex: 1, backgroundColor: theme.dark ? '#000' : '#fff' }}>
       <View>
         <Text
           variant="displaySmall"
@@ -78,6 +79,7 @@ export default function CreateScreen() {
             marginBottom: 30,
             marginHorizontal: 16,
             fontFamily: 'Poppins-ExtraLight',
+            color: theme.colors.onBackground,
           }}
         >
           Create QR

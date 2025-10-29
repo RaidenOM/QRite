@@ -18,7 +18,10 @@ export default function ScanScreen() {
   const [value, setValue] = useState('');
   const [type, setType] = useState('');
   const [showDialog, setShowDialog] = useState(false);
-  const { playSound, showAlert, dismissAlert } = useContext(AppContext);
+  const { playSound, showAlert, dismissAlert, userSettings } =
+    useContext(AppContext);
+
+  const isDark = userSettings.theme === 'dark';
 
   const handleGalleryPick = async () => {
     try {
@@ -118,12 +121,14 @@ export default function ScanScreen() {
     navigation.navigate('QRScannerScreen');
   };
 
+  const gradientArray = isDark ? ['#000', '#000'] : ['#fac7ffff', '#fff'];
+
   return (
     <LinearGradient
       style={{
         flex: 1,
       }}
-      colors={['#fac7ffff', '#fff']}
+      colors={gradientArray}
     >
       <ScannedQRDialog
         onDismiss={() => setShowDialog(false)}

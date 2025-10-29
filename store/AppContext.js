@@ -1,16 +1,17 @@
-const { createContext, useState, useEffect } = require('react');
-import { Alert, StatusBar, View } from 'react-native';
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import { Vibration } from 'react-native';
 import Sound from 'react-native-sound';
 import AlertDialog from '../components/AlertDialog';
 import RNBootSplash from 'react-native-bootsplash';
-import { Text } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import SplashScreen from '../screens/SplashScreen';
+import { ThemeContext } from './ThemeContext';
 
 export const AppContext = createContext();
 
 export default function AppContextProvider({ children }) {
   const [sound, setSound] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [alert, setAlert] = useState({
     visible: false,
     title: '',
@@ -18,11 +19,84 @@ export default function AppContextProvider({ children }) {
     buttons: [],
   });
   const [bootSplashHidden, setBootSplashHidden] = useState(false);
+  const { changeTheme } = useContext(ThemeContext);
+  const [userSettings, setUserSettings] = useState({
+    theme: 'system',
+    sound: true,
+    vibrate: true,
+  });
 
+  // auto save when settings change
   useEffect(() => {
-    RNBootSplash.hide();
-    setBootSplashHidden(true);
+    const save = setTimeout(() => {
+      AsyncStorage.setItem('userSettings', JSON.stringify(userSettings));
+    }, 300);
+
+    return () => clearTimeout(save);
+  }, [userSettings]);
+
+  // init app and hide bootsplash
+  useEffect(() => {
+    const init = async () => {
+      const settingsString = await AsyncStorage.getItem('userSettings');
+      let settingsJson = {};
+      try {
+        settingsJson = settingsString ? JSON.parse(settingsString) : {};
+      } catch (e) {
+        console.log(e);
+      }
+      setUserSettings(prev => ({ ...prev, ...settingsJson }));
+
+      Sound.setCategory('Playback');
+      const soundFile = new Sound('scanner_sound', Sound.MAIN_BUNDLE, error => {
+        if (error) {
+          console.log(error);
+          return;
+        }
+        setSound(soundFile);
+      });
+
+      await RNBootSplash.hide();
+      setBootSplashHidden(true);
+    };
+
+    init();
+
+    return () => {
+      if (sound) {
+        sound.release();
+      }
+    };
   }, []);
+
+  // sync theme with theme provider
+  useEffect(() => {
+    changeTheme(userSettings.theme);
+  }, [userSettings.theme]);
+
+  // change user settings
+  const changeThemeSetting = selectedTheme => {
+    setUserSettings(prevSettings => {
+      const newSettings = {
+        ...prevSettings,
+        theme: selectedTheme,
+      };
+      return newSettings;
+    });
+  };
+  const toggleSound = () => {
+    setUserSettings(prevSettings => {
+      const newSettings = { ...prevSettings, sound: !prevSettings.sound };
+      return newSettings;
+    });
+  };
+
+  const toggleVibrate = () => {
+    setUserSettings(prevSettings => {
+      const newSettings = { ...prevSettings, vibrate: !prevSettings.vibrate };
+      return newSettings;
+    });
+  };
 
   useEffect(() => {
     if (bootSplashHidden) {
@@ -31,41 +105,6 @@ export default function AppContextProvider({ children }) {
       }, 2500);
     }
   }, [bootSplashHidden]);
-
-  function SplashScreen() {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#000',
-        }}
-      >
-        <StatusBar backgroundColor="#000" barStyle="light-content" />
-        <Text
-          style={{
-            color: '#fff',
-            fontFamily: 'Michroma-Regular',
-            fontSize: 48,
-          }}
-        >
-          QRite
-        </Text>
-        <Text
-          style={{
-            fontFamily: 'Michroma-Regular',
-            fontSize: 15,
-            position: 'absolute',
-            bottom: 50,
-            color: '#9E9E9E',
-          }}
-        >
-          Designed by Om Kumar
-        </Text>
-      </View>
-    );
-  }
 
   const showAlert = (title, content, buttons = []) => {
     setAlert({
@@ -80,31 +119,15 @@ export default function AppContextProvider({ children }) {
     setAlert(prev => ({ ...prev, visible: false }));
   };
 
-  Sound.setCategory('Playback');
-
-  useEffect(() => {
-    const soundFile = new Sound('scanner_sound', Sound.MAIN_BUNDLE, error => {
-      if (error) {
-        Alert.alert('Error Initializing Asset', error);
-        return;
-      }
-      setSound(soundFile);
-    });
-
-    return () => {
-      sound?.release();
-    };
-  }, []);
-
+  // haptic feedback and sounds
   const playSound = () => {
-    if (sound) {
+    if (sound && userSettings.sound) {
       sound.play();
     }
   };
-
-  const stopSound = () => {
-    if (sound) {
-      sound.stop();
+  const hapticFeedback = () => {
+    if (userSettings.vibrate) {
+      Vibration.vibrate(100);
     }
   };
 
@@ -112,7 +135,18 @@ export default function AppContextProvider({ children }) {
 
   return (
     <AppContext.Provider
-      value={{ sound, loading, playSound, stopSound, showAlert, dismissAlert }}
+      value={{
+        sound,
+        loading,
+        playSound,
+        hapticFeedback,
+        showAlert,
+        dismissAlert,
+        userSettings,
+        changeThemeSetting,
+        toggleSound,
+        toggleVibrate,
+      }}
     >
       {children}
       <AlertDialog
