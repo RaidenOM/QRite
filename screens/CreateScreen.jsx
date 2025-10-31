@@ -70,7 +70,12 @@ export default function CreateScreen() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: theme.dark ? '#000' : theme.colors.background,
+      }}
+    >
       <View>
         <Text
           variant="displaySmall"

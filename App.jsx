@@ -28,7 +28,7 @@ const HomeTabs = () => {
         tabBarStyle: {
           elevation: 6,
           backgroundColor: theme.dark
-            ? '#282828ff'
+            ? theme.colors.surface
             : theme.colors.elevation.level1,
           height: 65,
           paddingTop: 4,
@@ -78,13 +78,17 @@ function MainApp() {
   return (
     <>
       <StatusBar
-        backgroundColor={theme.dark ? '#282828ff' : theme.colors.primary}
+        backgroundColor={
+          theme.dark ? theme.colors.surface : theme.colors.primary
+        }
       />
       <Stack.Navigator
         screenOptions={({ navigation, route }) => ({
           headerTintColor: '#fff',
           headerStyle: {
-            backgroundColor: theme.dark ? '#282828ff' : theme.colors.primary,
+            backgroundColor: theme.dark
+              ? theme.colors.surface
+              : theme.colors.primary,
           },
           headerTitleStyle: {
             color: '#fff',

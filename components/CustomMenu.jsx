@@ -56,9 +56,7 @@ export default function CustomNavigationBar({ navigation }) {
               position: 'absolute',
               top: menuY,
               right: 16,
-              backgroundColor: theme.dark
-                ? '#282828ff'
-                : theme.colors.elevation.level1,
+              backgroundColor: theme.colors.surface,
               elevation: 8,
               borderRadius: theme.roundness,
             }}
