@@ -1,7 +1,14 @@
 import { useContext, useState } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { Switch } from 'react-native-gesture-handler';
-import { Dialog, List, Portal, Text, useTheme } from 'react-native-paper';
+import {
+  Dialog,
+  Divider,
+  List,
+  Portal,
+  Text,
+  useTheme,
+} from 'react-native-paper';
 import { AppContext } from '../store/AppContext';
 import { Dropdown } from 'react-native-element-dropdown';
 import themeOptions from '../constants/themeOptions';
@@ -35,12 +42,32 @@ export default function SettingsScreen() {
     ? theme.colors.primary
     : theme.colors.surfaceVariant;
 
+  const renderItem = (item, selected) => {
+    console.log(item);
+    return (
+      <List.Item
+        title={item.label}
+        style={{
+          borderBottomWidth: item._index !== 2 ? 0.5 : 0,
+          borderBottomColor: theme.colors.onSurfaceDisabled,
+        }}
+        right={() =>
+          selected && (
+            <List.Icon
+              icon="check"
+              color={theme.dark ? '#00ff33ff' : '#009a1fff'}
+            />
+          )
+        }
+      />
+    );
+  };
+
   return (
     <View
       style={{
         flex: 1,
-        backgroundColor: theme.dark ? '#000' : '#fff',
-        paddingHorizontal: 16,
+        backgroundColor: theme.colors.background,
       }}
     >
       <Portal>
@@ -72,8 +99,8 @@ export default function SettingsScreen() {
                 variant="bodyMedium"
                 style={{ textAlign: 'center', marginTop: 16 }}
               >
-                QRite is a cross platform compatible QR code app that allows
-                scanning and generation of QR codes.
+                QRite is a cross platform compatible app that allows scanning
+                and generation of QR codes.
               </Text>
               <Text
                 variant="bodyMedium"
@@ -86,75 +113,96 @@ export default function SettingsScreen() {
           </Dialog.Content>
         </Dialog>
       </Portal>
-      <List.Section>
-        <List.Subheader style={{ paddingHorizontal: 0 }}>
-          General
-        </List.Subheader>
-        <List.Item
-          title="Appearance"
-          left={() => <List.Icon icon="theme-light-dark" />}
-          right={() => (
-            <Dropdown
-              style={[
-                styles.dropdown,
-                { backgroundColor: theme.colors.surface },
-              ]}
-              placeholderStyle={{ color: theme.colors.onSurface }}
-              selectedTextStyle={{ color: theme.colors.onSurface }}
-              containerStyle={{
-                backgroundColor: theme.colors.surface,
-                borderRadius: 8,
-                overflow: 'hidden',
-              }}
-              activeColor={theme.colors.surfaceVariant}
-              itemTextStyle={{ color: theme.colors.onSurface }}
-              data={themeOptions}
-              maxHeight={200}
-              labelField="label"
-              valueField="value"
-              placeholder="Select theme"
-              value={userSettings.theme}
-              onChange={item => {
-                changeThemeSetting(item.value);
-              }}
-              renderRightIcon={() => (
-                <List.Icon icon="chevron-down" color={theme.colors.onSurface} />
-              )}
-            />
-          )}
-          disabled
-        />
-        <List.Item
-          title="Sound"
-          left={() => <List.Icon icon="volume-high" />}
-          right={() => (
-            <Switch
-              value={userSettings.sound}
-              onValueChange={toggleSound}
-              trackColor={trackColor}
-              thumbColor={soundThumbColor}
-            />
-          )}
-        />
-        <List.Item
-          title="Haptic Feedback"
-          left={() => <List.Icon icon="vibrate" />}
-          right={() => (
-            <Switch
-              value={userSettings.vibrate}
-              onValueChange={toggleVibrate}
-              trackColor={trackColor}
-              thumbColor={vibrateThumbColor}
-            />
-          )}
-        />
+      <ScrollView>
+        <List.Section>
+          <List.Subheader>General</List.Subheader>
+          <List.Item
+            title="Appearance"
+            description="Choose theme for app"
+            right={() => (
+              <Dropdown
+                style={[
+                  styles.dropdown,
+                  { backgroundColor: theme.colors.surface },
+                ]}
+                placeholderStyle={{ color: theme.colors.onSurface }}
+                selectedTextStyle={{ color: theme.colors.onSurface }}
+                containerStyle={{
+                  backgroundColor: theme.colors.surface,
+                  borderRadius: 8,
+                  overflow: 'hidden',
+                }}
+                activeColor={theme.colors.surfaceVariant}
+                itemTextStyle={{ color: theme.colors.onSurface }}
+                data={themeOptions}
+                maxHeight={200}
+                labelField="label"
+                valueField="value"
+                placeholder="Select theme"
+                value={userSettings.theme}
+                onChange={item => {
+                  changeThemeSetting(item.value);
+                }}
+                renderRightIcon={() => (
+                  <List.Icon
+                    icon="chevron-down"
+                    color={theme.colors.onSurface}
+                  />
+                )}
+                renderItem={renderItem}
+              />
+            )}
+            disabled
+          />
+          <List.Item
+            title="Sound"
+            description="Enable sound after a successsful scan"
+            right={() => (
+              <Switch
+                value={userSettings.sound}
+                onValueChange={toggleSound}
+                trackColor={trackColor}
+                thumbColor={soundThumbColor}
+              />
+            )}
+          />
+          <List.Item
+            title="Haptic Feedback"
+            description="Enable vibration after a successsful scan"
+            right={() => (
+              <Switch
+                value={userSettings.vibrate}
+                onValueChange={toggleVibrate}
+                trackColor={trackColor}
+                thumbColor={vibrateThumbColor}
+              />
+            )}
+          />
+        </List.Section>
+        <Divider />
+        <List.Section>
+          <List.Subheader>Support</List.Subheader>
+          <List.Item
+            title="Help & Feedback"
+            description="View help articles or contact support"
+          />
+        </List.Section>
+        <Divider />
+        <List.Section>
+          <List.Subheader>App</List.Subheader>
+          <List.Item title="About" onPress={() => setShowAboutDialog(true)} />
 
-        <List.Item
-          title="About"
-          left={() => <List.Icon icon="information-outline" />}
-          onPress={() => setShowAboutDialog(true)}
-        />
-      </List.Section>
+          <List.Item title="Version" description="v1.0-Beta" />
+          <List.Item
+            title="Check for Updates"
+            description="Check if a newer version is available"
+          />
+          <List.Item
+            title="Rate on Google Play"
+            description="Consider rating the app if you like it :)"
+          />
+        </List.Section>
+      </ScrollView>
     </View>
   );
 }

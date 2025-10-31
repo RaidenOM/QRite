@@ -1,30 +1,22 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {
-  MD3DarkTheme,
-  MD3LightTheme,
-  PaperProvider,
-  useTheme,
-} from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import ScanScreen from './screens/ScanScreen';
 import CreateScreen from './screens/CreateScreen';
 import QRScannerScreen from './screens/QRScannerScreen';
 import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
 import { Text } from 'react-native-paper';
-import AppContextProvider, { AppContext } from './store/AppContext';
-import { StatusBar } from 'react-native';
+import AppContextProvider from './store/AppContext';
+import { StatusBar, useWindowDimensions } from 'react-native';
 import SettingsScreen from './screens/SettingsScreen';
 import CustomMenu from './components/CustomMenu';
-import { useContext } from 'react';
 import ThemeContextProvider from './store/ThemeContext';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const HomeTabs = () => {
-  const { userSettings } = useContext(AppContext);
-  const isDark = userSettings.theme === 'dark';
   const theme = useTheme();
 
   return (
@@ -32,8 +24,19 @@ const HomeTabs = () => {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: theme.colors.onSurfaceVariant,
         tabBarStyle: {
-          backgroundColor: theme.colors.surface,
+          elevation: 6,
+          backgroundColor: theme.dark
+            ? '#282828ff'
+            : theme.colors.elevation.level1,
+          height: 65,
+          paddingTop: 4,
+          shadowColor: '#000',
+          shadowOpacity: 0.08,
+          shadowOffset: { width: 0, height: 4 },
+          shadowRadius: 8,
+          borderTopWidth: 0,
         },
       }}
     >
@@ -45,7 +48,7 @@ const HomeTabs = () => {
             <MaterialDesignIcons name="qrcode-scan" color={color} size={size} />
           ),
           tabBarLabel: ({ color, focused }) => (
-            <Text variant="labelSmall" style={{ color: color }}>
+            <Text variant="bodyMedium" style={{ color: color }}>
               Scan
             </Text>
           ),
@@ -56,14 +59,10 @@ const HomeTabs = () => {
         name="CreateScreen"
         options={{
           tabBarIcon: ({ color, focused, size }) => (
-            <MaterialDesignIcons
-              name="plus-circle-outline"
-              size={size}
-              color={color}
-            />
+            <MaterialDesignIcons name="pencil" size={size} color={color} />
           ),
           tabBarLabel: ({ color, focused }) => (
-            <Text variant="labelSmall" style={{ color: color }}>
+            <Text variant="bodyMedium" style={{ color: color }}>
               Create
             </Text>
           ),
@@ -79,17 +78,13 @@ function MainApp() {
   return (
     <>
       <StatusBar
-        backgroundColor={
-          theme.dark ? theme.colors.surface : theme.colors.primary
-        }
+        backgroundColor={theme.dark ? '#282828ff' : theme.colors.primary}
       />
       <Stack.Navigator
         screenOptions={({ navigation, route }) => ({
           headerTintColor: '#fff',
           headerStyle: {
-            backgroundColor: theme.dark
-              ? theme.colors.surface
-              : theme.colors.primary,
+            backgroundColor: theme.dark ? '#282828ff' : theme.colors.primary,
           },
           headerTitleStyle: {
             color: '#fff',
@@ -126,8 +121,6 @@ function MainApp() {
 }
 
 export default function App() {
-  const theme = useTheme();
-
   return (
     <ThemeContextProvider>
       <AppContextProvider>

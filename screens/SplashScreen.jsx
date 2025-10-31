@@ -1,3 +1,4 @@
+import LottieView from 'lottie-react-native';
 import { StatusBar, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
@@ -17,10 +18,16 @@ export default function SplashScreen() {
           color: '#fff',
           fontFamily: 'Michroma-Regular',
           fontSize: 48,
+          zIndex: 10,
         }}
       >
         QRite
       </Text>
+      <LottieView
+        source={require('../assets/lottie/splash_screen.json')}
+        style={{ width: 450, height: 450, position: 'absolute', zIndex: 0 }}
+        autoPlay
+      />
       <Text
         style={{
           fontFamily: 'Michroma-Regular',

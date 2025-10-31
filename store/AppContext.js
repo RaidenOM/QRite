@@ -102,7 +102,7 @@ export default function AppContextProvider({ children }) {
     if (bootSplashHidden) {
       setTimeout(() => {
         setLoading(false);
-      }, 2500);
+      }, 5000);
     }
   }, [bootSplashHidden]);
 

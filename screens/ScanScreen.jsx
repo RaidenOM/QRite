@@ -1,7 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import { useContext, useState } from 'react';
-import { Linking, Platform, ScrollView, Vibration, View } from 'react-native';
+import {
+  Linking,
+  Platform,
+  ScrollView,
+  useWindowDimensions,
+  Vibration,
+  View,
+} from 'react-native';
 import { Button, Text, useTheme } from 'react-native-paper';
 import { useCameraPermission } from 'react-native-vision-camera';
 import LinearGradient from 'react-native-linear-gradient';
@@ -18,9 +25,10 @@ export default function ScanScreen() {
   const [value, setValue] = useState('');
   const [type, setType] = useState('');
   const [showDialog, setShowDialog] = useState(false);
-  const { playSound, showAlert, dismissAlert, userSettings, hapticFeedback } =
+  const { playSound, showAlert, dismissAlert, hapticFeedback } =
     useContext(AppContext);
   const theme = useTheme();
+  const { width, height } = useWindowDimensions();
 
   const handleGalleryPick = async () => {
     try {
@@ -120,14 +128,12 @@ export default function ScanScreen() {
     navigation.navigate('QRScannerScreen');
   };
 
-  const gradientArray = theme.dark ? ['#000', '#000'] : ['#fac7ffff', '#fff'];
-
   return (
-    <LinearGradient
+    <View
       style={{
         flex: 1,
+        backgroundColor: theme.colors.background,
       }}
-      colors={gradientArray}
     >
       <ScannedQRDialog
         onDismiss={() => setShowDialog(false)}
@@ -137,12 +143,11 @@ export default function ScanScreen() {
       />
 
       <ScrollView>
-        <View style={{ alignSelf: 'center' }}>
+        <View style={{ alignSelf: 'center', width: '100%' }}>
           <LottieView
-            source={require('../assets/lottie/QR Code.json')}
+            source={require('../assets/lottie/scan_screen.json')}
             style={{
-              width: 300,
-              height: 300,
+              height: height * 0.4,
             }}
             autoPlay
           />
@@ -151,7 +156,7 @@ export default function ScanScreen() {
           variant="displaySmall"
           style={{
             textAlign: 'center',
-            fontFamily: 'Poppins-SemiBold',
+            fontFamily: 'Poppins-Regular',
             marginHorizontal: 20,
           }}
         >
@@ -190,6 +195,6 @@ export default function ScanScreen() {
           </View>
         </View>
       </ScrollView>
-    </LinearGradient>
+    </View>
   );
 }

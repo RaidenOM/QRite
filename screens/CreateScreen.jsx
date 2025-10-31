@@ -9,6 +9,7 @@ import ContactForm from '../components/ContactForm';
 import EmailForm from '../components/EmailForm';
 import EventForm from '../components/EventForm';
 import PhoneForm from '../components/PhoneForm';
+import { LIGHT } from '../store/ThemeContext';
 
 export default function CreateScreen() {
   const [type, setType] = useState('URL');
@@ -69,7 +70,7 @@ export default function CreateScreen() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.dark ? '#000' : '#fff' }}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View>
         <Text
           variant="displaySmall"

@@ -56,25 +56,19 @@ export default function CustomNavigationBar({ navigation }) {
               position: 'absolute',
               top: menuY,
               right: 16,
-              backgroundColor: theme.dark ? theme.colors.surface : '#f4edf9',
+              backgroundColor: theme.dark
+                ? '#282828ff'
+                : theme.colors.elevation.level1,
               elevation: 8,
               borderRadius: theme.roundness,
             }}
           >
             <Menu.Item title="Share" leadingIcon={'share'} />
             <Menu.Item title="Rate on Google Play" leadingIcon={'star'} />
-            <Divider />
             <Menu.Item
               title="Settings"
               leadingIcon={'cog'}
               onPress={() => handleMenuPress('settings', navigation)}
-            />
-            <Menu.Item title="Help and Feedback" leadingIcon={'help'} />
-            <Divider />
-            <Menu.Item
-              title="Close Menu"
-              leadingIcon={'close'}
-              onPress={closeMenu}
             />
           </View>
         </Portal>

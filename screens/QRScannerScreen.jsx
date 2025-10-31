@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { StyleSheet, Vibration, View } from 'react-native';
+import { StatusBar, StyleSheet, Vibration, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
 import {
   Camera,
@@ -57,6 +57,7 @@ export default function QRScannerScreen() {
 
   return (
     <View style={styles.container}>
+      <StatusBar hidden />
       <ScannedQRDialog
         onDismiss={() => setShowDialog(false)}
         visible={showDialog}
@@ -74,7 +75,7 @@ export default function QRScannerScreen() {
 
       {scanning && (
         <LottieView
-          source={require('../assets/lottie/Scanning QR Code.json')}
+          source={require('../assets/lottie/qr_scanner_screen.json')}
           style={{
             width: 250,
             height: 250,
@@ -131,12 +132,12 @@ const styles = StyleSheet.create({
   },
   flashButton: {
     position: 'absolute',
-    left: 20,
+    left: 30,
     bottom: 80,
   },
   flipButton: {
     position: 'absolute',
-    right: 20,
+    right: 30,
     bottom: 80,
   },
 });
