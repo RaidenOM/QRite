@@ -9,6 +9,7 @@ import ContactForm from '../components/ContactForm';
 import EmailForm from '../components/EmailForm';
 import EventForm from '../components/EventForm';
 import PhoneForm from '../components/PhoneForm';
+import SMSForm from '../components/SMSForm';
 import { LIGHT } from '../store/ThemeContext';
 
 export default function CreateScreen() {
@@ -62,6 +63,13 @@ export default function CreateScreen() {
       case 'Contact':
         return (
           <ContactForm
+            onGenerate={onGenerate}
+            style={{ marginHorizontal: 16, marginTop: 24 }}
+          />
+        );
+      case 'SMS':
+        return (
+          <SMSForm
             onGenerate={onGenerate}
             style={{ marginHorizontal: 16, marginTop: 24 }}
           />

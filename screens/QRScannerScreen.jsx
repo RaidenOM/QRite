@@ -33,7 +33,7 @@ export default function QRScannerScreen() {
     },
   });
 
-  const handleScan = scannedData => {
+  const handleScan = async scannedData => {
     if (!scanning) return;
     setScanning(false);
 
@@ -41,7 +41,7 @@ export default function QRScannerScreen() {
     hapticFeedback();
 
     let scannedValue = scannedData[0].value;
-    let detectedType = getType(scannedValue);
+    let detectedType = await getType(scannedValue);
 
     if (
       detectedType === 'URL' &&

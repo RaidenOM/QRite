@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { Switch } from 'react-native-gesture-handler';
 import {
@@ -12,6 +12,7 @@ import {
 import { AppContext } from '../store/AppContext';
 import { Dropdown } from 'react-native-element-dropdown';
 import themeOptions from '../constants/themeOptions';
+import DeviceInfo from 'react-native-device-info';
 
 export default function SettingsScreen() {
   const { toggleSound, toggleVibrate, changeThemeSetting, userSettings } =
@@ -192,7 +193,7 @@ export default function SettingsScreen() {
           <List.Subheader>App</List.Subheader>
           <List.Item title="About" onPress={() => setShowAboutDialog(true)} />
 
-          <List.Item title="Version" description="v1.0-Beta" />
+          <List.Item title="Version" description={DeviceInfo.getVersion()} />
           <List.Item
             title="Check for Updates"
             description="Check if a newer version is available"

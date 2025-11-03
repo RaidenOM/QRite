@@ -1,4 +1,4 @@
-package com.qrite
+package com.omkumar.qrite
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

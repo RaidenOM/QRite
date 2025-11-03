@@ -1,4 +1,4 @@
-package com.qrite
+package com.omkumar.qrite
 
 import android.app.Application
 import com.facebook.react.PackageList

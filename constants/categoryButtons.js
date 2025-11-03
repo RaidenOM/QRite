@@ -9,7 +9,7 @@ const categoryButtons = [
     label: 'Text',
     icon: 'text-box-outline',
   },
-  { value: 'Event', label: 'Event', icon: 'calendar' },
+  { value: 'Event', label: 'Event', icon: 'calendar-outline' },
   {
     value: 'Contact',
     label: 'Contact',
@@ -17,6 +17,7 @@ const categoryButtons = [
   },
   { value: 'Email', label: 'Email', icon: 'email-outline' },
   { value: 'Phone', label: 'Phone', icon: 'phone-outline' },
+  { value: 'SMS', label: 'SMS', icon: 'message-outline' },
 ];
 
 export default categoryButtons;

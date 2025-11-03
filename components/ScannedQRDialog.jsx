@@ -14,6 +14,7 @@ export default function ScannedQRDialog({ visible, onDismiss, value, type }) {
   };
 
   const actionHandler = async () => {
+    console.log({ value, type });
     try {
       if (type === 'Contact') {
         const path = FileSystem.CachesDirectoryPath + '/contact.vcf';

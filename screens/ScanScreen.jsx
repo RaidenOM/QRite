@@ -53,7 +53,7 @@ export default function ScanScreen() {
       hapticFeedback();
 
       let scannedValue = result.data;
-      let detectedType = getType(scannedValue);
+      let detectedType = await getType(scannedValue);
 
       if (
         detectedType === 'URL' &&
