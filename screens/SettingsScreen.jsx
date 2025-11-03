@@ -193,7 +193,10 @@ export default function SettingsScreen() {
           <List.Subheader>App</List.Subheader>
           <List.Item title="About" onPress={() => setShowAboutDialog(true)} />
 
-          <List.Item title="Version" description={DeviceInfo.getVersion()} />
+          <List.Item
+            title="Version"
+            description={DeviceInfo.getReadableVersion()}
+          />
           <List.Item
             title="Check for Updates"
             description="Check if a newer version is available"
