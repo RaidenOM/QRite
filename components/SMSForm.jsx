@@ -15,7 +15,9 @@ export default function SMSForm({ onGenerate, style }) {
   const theme = useTheme();
   const { showAlert, dismissAlert } = useContext(AppContext);
 
-  const data = `sms:${recipient}?body=${body}`;
+  const data = `sms:${encodeURIComponent(recipient)}?body=${encodeURIComponent(
+    body,
+  )}`;
 
   const hasContactsPermissions = async () => {
     const result = await PermissionsAndroid.request(
@@ -57,14 +59,15 @@ export default function SMSForm({ onGenerate, style }) {
     const response = await Contacts.getAll();
     setContacts(response);
     setShowPicker(true);
+    setPickerLoading(false);
   };
 
   const pickerDismissHandler = () => {
     setShowPicker(false);
   };
 
-  const pickerSelectHandler = pickedNumber => {
-    setRecepient(pickedNumber);
+  const pickerSelectHandler = pickedContact => {
+    setRecepient(pickedContact.phone);
     setShowPicker(false);
   };
 

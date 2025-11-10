@@ -18,7 +18,7 @@ export default function ContactPicker({
   onPickerSelect,
 }) {
   const [searchedContacts, setSearchedContacts] = useState();
-  const [pickedNumber, setPickedNumber] = useState('');
+  const [pickedContact, setPickedContact] = useState();
   const [search, setSearch] = useState('');
   const theme = useTheme();
 
@@ -73,8 +73,8 @@ export default function ContactPicker({
         />
 
         <RadioButton.Group
-          onValueChange={value => setPickedNumber(value)}
-          value={pickedNumber}
+          onValueChange={value => setPickedContact(JSON.parse(value))}
+          value={pickedContact ? JSON.stringify(pickedContact) : ''}
         >
           <View style={{ maxHeight: 300, minHeight: 300, marginTop: 24 }}>
             <FlatList
@@ -88,7 +88,16 @@ export default function ContactPicker({
                       <List.Item
                         title={phoneItem.number}
                         key={index}
-                        left={() => <RadioButton value={phoneItem.number} />}
+                        left={() => (
+                          <RadioButton
+                            value={JSON.stringify({
+                              name: item.displayName || '',
+                              phone: phoneItem.number || '',
+                              email: item.emailAddresses?.[0]?.email || '',
+                              company: item.company || '',
+                            })}
+                          />
+                        )}
                       />
                     ))}
                   </View>
@@ -106,7 +115,12 @@ export default function ContactPicker({
           }}
         >
           <Button onPress={onPickerDismiss}>Cancel</Button>
-          <Button onPress={() => onPickerSelect(pickedNumber)}>Confirm</Button>
+          <Button
+            disabled={!pickedContact}
+            onPress={() => onPickerSelect(pickedContact)}
+          >
+            Confirm
+          </Button>
         </View>
       </Modal>
     </Portal>
