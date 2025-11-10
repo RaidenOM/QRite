@@ -24,6 +24,7 @@
     "react": "19.1.1",
     "react-native": "0.82.1",
     "react-native-bootsplash": "^6.3.11",
+    "react-native-contacts": "^8.0.7",
     "react-native-device-info": "^14.1.1",
     "react-native-element-dropdown": "^2.12.4",
     "react-native-fs": "^2.20.0",

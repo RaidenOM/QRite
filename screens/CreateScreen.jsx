@@ -88,7 +88,6 @@ export default function CreateScreen() {
         <Text
           variant="displaySmall"
           style={{
-            fontFamily: 'Poppins',
             marginTop: 20,
             marginBottom: 30,
             marginHorizontal: 16,
