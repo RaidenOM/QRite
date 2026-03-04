@@ -14,7 +14,6 @@ export default function ScannedQRDialog({ visible, onDismiss, value, type }) {
   };
 
   const actionHandler = async () => {
-    console.log({ value, type });
     try {
       if (type === 'Contact') {
         const path = FileSystem.CachesDirectoryPath + '/contact.vcf';
@@ -61,11 +60,11 @@ export default function ScannedQRDialog({ visible, onDismiss, value, type }) {
           Scan Result
         </Dialog.Title>
         <Dialog.Content>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{ flexDirection: 'row', paddingHorizontal: 10 }}>
             <Text variant="bodyMedium">Data: </Text>
             <Text variant="bodyMedium">{value}</Text>
           </View>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{ flexDirection: 'row', paddingHorizontal: 10 }}>
             <Text variant="bodyMedium">Type: </Text>
             <Text variant="bodyMedium">{type}</Text>
           </View>
@@ -75,7 +74,7 @@ export default function ScannedQRDialog({ visible, onDismiss, value, type }) {
           <View style={{ flexDirection: 'row' }}>
             <Button onPress={copyHandler}>Copy</Button>
             {type !== 'Text' && (
-              <Button onPress={actionHandler}>Perform Action</Button>
+              <Button onPress={actionHandler}>Perform action</Button>
             )}
           </View>
         </Dialog.Actions>

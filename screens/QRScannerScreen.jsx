@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { StatusBar, StyleSheet, Vibration, View } from 'react-native';
-import { IconButton } from 'react-native-paper';
+import { IconButton, Text } from 'react-native-paper';
 import {
   Camera,
   useCameraDevice,
@@ -21,10 +21,7 @@ export default function QRScannerScreen() {
   const [facing, setFacing] = useState('back');
   const { playSound, hapticFeedback } = useContext(AppContext);
 
-  console.log({ torch });
-
   const device = useCameraDevice(facing);
-  console.log(device);
 
   const codeScanner = useCodeScanner({
     codeTypes: ['qr'],
@@ -65,26 +62,36 @@ export default function QRScannerScreen() {
         type={type}
       />
 
-      <Camera
-        style={styles.camera}
-        codeScanner={codeScanner}
-        torch={torch ? 'on' : 'off'}
-        device={device}
-        isActive={true}
-      />
-
-      {scanning && (
-        <LottieView
-          source={require('../assets/lottie/qr_scanner_screen.json')}
-          style={{
-            width: 250,
-            height: 250,
-            position: 'absolute',
-            alignSelf: 'center',
-          }}
-          autoPlay
-        />
+      {device ? (
+        <>
+          <Camera
+            style={styles.camera}
+            codeScanner={codeScanner}
+            torch={torch ? 'on' : 'off'}
+            device={device}
+            isActive={true}
+          />
+          {scanning && (
+            <LottieView
+              source={require('../assets/lottie/qr_scanner_screen.json')}
+              style={{
+                width: 250,
+                height: 250,
+                position: 'absolute',
+                alignSelf: 'center',
+              }}
+              autoPlay
+            />
+          )}
+        </>
+      ) : (
+        <View
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+        >
+          <Text style={{ color: '#fff' }}>Camera not found</Text>
+        </View>
       )}
+
       <IconButton
         icon={torch ? 'flashlight-off' : 'flashlight'}
         style={styles.flashButton}
@@ -118,7 +125,7 @@ export default function QRScannerScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
     position: 'relative',
     justifyContent: 'center',
   },

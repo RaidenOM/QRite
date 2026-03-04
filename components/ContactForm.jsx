@@ -57,6 +57,7 @@ END:VCARD`;
       return;
     }
     const response = await Contacts.getAll();
+    console.log(response);
     setContacts(response);
     setShowPicker(true);
   };

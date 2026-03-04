@@ -41,14 +41,12 @@ export default function ScanScreen() {
       if (!response) return;
 
       const result = await QRKit.decodeQR(response.path);
-      console.log(result);
 
       if (!result.success) throw new Error(result.message);
 
       if (!result.data.trim())
         throw new Error('QR Code does not contain any data');
 
-      console.log(result);
       playSound();
       hapticFeedback();
 
