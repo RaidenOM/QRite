@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, Linking, ScrollView, StyleSheet, View } from 'react-native';
 import { Switch } from 'react-native-gesture-handler';
 import {
   Dialog,
@@ -13,12 +13,14 @@ import { AppContext } from '../store/AppContext';
 import { Dropdown } from 'react-native-element-dropdown';
 import themeOptions from '../constants/themeOptions';
 import DeviceInfo from 'react-native-device-info';
+import { useNavigation } from '@react-navigation/native';
 
 export default function SettingsScreen() {
   const { toggleSound, toggleVibrate, changeThemeSetting, userSettings } =
     useContext(AppContext);
   const theme = useTheme();
   const [showAboutDialog, setShowAboutDialog] = useState(false);
+  const navigation = useNavigation();
 
   const trackColor = theme.dark
     ? {
@@ -62,6 +64,15 @@ export default function SettingsScreen() {
         }
       />
     );
+  };
+
+  const rateApp = () => {
+    const packageName = 'com.whatsapp';
+    Linking.openURL(`market://details?id=${packageName}`).catch(() => {
+      Linking.openURL(
+        `https://play.google.com/store/apps/details?id=${packageName}`,
+      );
+    });
   };
 
   return (
@@ -186,6 +197,9 @@ export default function SettingsScreen() {
           <List.Item
             title="Help & Feedback"
             description="View help articles or contact support"
+            onPress={() => {
+              navigation.navigate('HelpAndFeedbackScreen');
+            }}
           />
         </List.Section>
         <Divider />
@@ -201,6 +215,7 @@ export default function SettingsScreen() {
           <List.Item
             title="Rate on Google Play"
             description="Consider rating the app if you like it :)"
+            onPress={() => rateApp()}
           />
         </List.Section>
       </ScrollView>

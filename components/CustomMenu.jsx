@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
 import {
   Divider,
   IconButton,
@@ -7,6 +7,7 @@ import {
   Portal,
   useTheme,
 } from 'react-native-paper';
+import Share from 'react-native-share';
 
 export default function CustomNavigationBar({ navigation }) {
   const theme = useTheme();
@@ -36,6 +37,27 @@ export default function CustomNavigationBar({ navigation }) {
     }
   };
 
+  const rateApp = () => {
+    const packageName = 'com.whatsapp';
+    Linking.openURL(`market://details?id=${packageName}`).catch(() => {
+      Linking.openURL(
+        `https://play.google.com/store/apps/details?id=${packageName}`,
+      );
+    });
+  };
+
+  const shareApp = async () => {
+    try {
+      await Share.open({
+        title: 'Share QRite',
+        message: 'Download QRite: QR Scanner & Generator',
+        url: 'https://play.google.com/store/apps/details?id=com.whatsapp',
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <View ref={iconRef}>
@@ -61,8 +83,16 @@ export default function CustomNavigationBar({ navigation }) {
               borderRadius: theme.roundness,
             }}
           >
-            <Menu.Item title="Share" leadingIcon={'share'} />
-            <Menu.Item title="Rate on Google Play" leadingIcon={'star'} />
+            <Menu.Item
+              title="Share"
+              leadingIcon={'share'}
+              onPress={() => shareApp()}
+            />
+            <Menu.Item
+              title="Rate on Google Play"
+              leadingIcon={'star'}
+              onPress={() => rateApp()}
+            />
             <Menu.Item
               title="Settings"
               leadingIcon={'cog'}

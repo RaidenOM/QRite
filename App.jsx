@@ -10,6 +10,7 @@ import { Text } from 'react-native-paper';
 import AppContextProvider from './store/AppContext';
 import { StatusBar, useWindowDimensions } from 'react-native';
 import SettingsScreen from './screens/SettingsScreen';
+import HelpAndFeedbackScreen from './screens/HelpAndFeedbackScreen';
 import CustomMenu from './components/CustomMenu';
 import ThemeContextProvider from './store/ThemeContext';
 
@@ -118,6 +119,11 @@ function MainApp() {
           options={{
             headerTitle: 'Settings',
           }}
+        />
+        <Stack.Screen
+          component={HelpAndFeedbackScreen}
+          name="HelpAndFeedbackScreen"
+          options={{ headerTitle: 'Help & Feedback' }}
         />
       </Stack.Navigator>
     </>
