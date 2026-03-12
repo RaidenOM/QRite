@@ -8,7 +8,7 @@ import QRScannerScreen from './screens/QRScannerScreen';
 import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons';
 import { Text } from 'react-native-paper';
 import AppContextProvider from './store/AppContext';
-import { StatusBar, useWindowDimensions } from 'react-native';
+import { StatusBar } from 'react-native';
 import SettingsScreen from './screens/SettingsScreen';
 import HelpAndFeedbackScreen from './screens/HelpAndFeedbackScreen';
 import CustomMenu from './components/CustomMenu';
